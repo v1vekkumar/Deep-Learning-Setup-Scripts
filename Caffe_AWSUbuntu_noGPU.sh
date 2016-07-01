@@ -61,8 +61,22 @@ free -m
 
 make pycaffe
 
+#Setup PYTHONPATH to include caffe library
+echo "export PYTHONPATH=/home/ubuntu/caffe/python:\$PYTHONPATH" >> ~/.bashrc
+
 # for enabling notebook
-pip install jupyter
-mkdir ~/certificates
-echo "Create a python notebook here https://ipython.org/ipython-doc/3/notebook/public_server.html"
+echo "############################################################################################"
+echo "##                                                                                        ##"
+echo "##                                                                                        ##"
+echo "##                                                                                        ##"
+echo "##                                                                                        ##"
+echo "##                                                                                        ##"
+echo "##                                                                                        ##"
+echo "##   Caffe and pyCaffe have been installed. Please check for errors.                      ##"
+echo "##   If you want to use remoite iPython ie Jupiter notebook please use the                ##"
+echo "##   notes here https://ipython.org/ipython-doc/3/notebook/public_server.html             ##"
+echo "##                                                                                        ##"
+echo "##                                                                                        ##"
+echo "##                                                                                        ##"
+echo "############################################################################################"
 
