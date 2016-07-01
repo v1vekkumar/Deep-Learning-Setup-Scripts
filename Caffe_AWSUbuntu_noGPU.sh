@@ -5,7 +5,7 @@
 sudo apt-get -y update
 sudo apt-get -y upgrade
 
-sudo apt-get -y install unzip cmake python-pip
+sudo apt-get -y install unzip cmake python-pip git python-scipy
 
 # 1. Genral Depenancies
 sudo apt-get -y install libprotobuf-dev libleveldb-dev libsnappy-dev libopencv-dev libhdf5-serial-dev protobuf-compiler 
@@ -26,36 +26,12 @@ sudo apt-get -y install the python-dev
 
 sudo apt-get -y install libgflags-dev libgoogle-glog-dev liblmdb-dev
 
-# 5. Remaining dependencies, 12.04
-#     These dependencies need manual installation in 12.04.
-
-# glog
-wget https://google-glog.googlecode.com/files/glog-0.3.3.tar.gz
-tar zxvf glog-0.3.3.tar.gz
-cd glog-0.3.3
-./configure
-make && sudo make install
-
-# gflags
-wget https://github.com/schuhschuh/gflags/archive/master.zip
-unzip master.zip
-cd gflags-master
-mkdir build && cd build
-export CXXFLAGS="-fPIC" && cmake .. && make VERBOSE=1
-make && sudo make install
-# lmdb
-git clone https://github.com/LMDB/lmdb
-cd lmdb/libraries/liblmdb
-make && sudo make install
-
-# Note that glog does not compile with the most recent gflags version (2.1), so before that is resolved you will need to build with glog first.
-
 ## Eevrything below should be common for all platforms
 git clone https://github.com/BVLC/caffe.git
 cd caffe
 
 #install pyhton requirements
-for req in $(cat python/requirements.txt); do pip install $req; done
+for req in $(cat python/requirements.txt); do sudo pip install $req; done
 export PYTHONPATH=/home/ubuntu/caffe/python:$PYTHONPATH
 
 # Setup the Makefile config
@@ -66,5 +42,27 @@ sed -i '/CPU_ONLY/s/^#//g' Makefile.config
 # Doulble Check the python Path
 make -j4 all
 make test
+
+# Hack to workaround issue "libdc1394 error: Failed to initialize libdc1394"
+# see http://stackoverflow.com/questions/12689304/ctypes-error-libdc1394-error-failed-to-initialize-libdc1394
+
+sudo ln /dev/null /dev/raw1394
+
 make runtest
+
+# Make Swapfile for make pycaffe to run
+
+sudo fallocate -l 4G /swapfile 
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sudo swapon -s
+free -m
+
 make pycaffe
+
+# for enabling notebook
+pip install jupyter
+mkdir ~/certificates
+echo "Create a python notebook here https://ipython.org/ipython-doc/3/notebook/public_server.html"
+
